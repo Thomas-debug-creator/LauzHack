@@ -25,7 +25,8 @@ def main():
     # temperature_span = temperature_evolution.cooling_law(T_hot, T_cold, k, time_span)
     # plt.plot(time_span, temperature_span)
     # plt.show()
-
+    
+    # tt.rooms[list_rooms[0]].display()
     hrs = HeatingRegulationSystem(tt.rooms[list_rooms[0]])
     hrs.control_heating()
     hrs.plot_heat_regulation_curve()

@@ -5,11 +5,12 @@ import datetime
 
 class HeatingRegulationSystem:
 
-    def __init__(self, room, T_min=15, T_ideal=25, warmup=15) -> None:
+    def __init__(self, room, T_min=10, T_ideal=25, warmup=15, cooldown=5) -> None:
         self.room = room 
         self.T_min = T_min
         self.T_ideal = T_ideal
         self.warmup = warmup                             # minutes takes to attain desired temperature
+        self.cooldown = cooldown                             # minutes takes to attain desired temperature
         self.heat_regulation_curve = {} 
     
     def control_heating(self):
@@ -25,7 +26,7 @@ class HeatingRegulationSystem:
             if key not in self.heat_regulation_curve.keys():
                 self.heat_regulation_curve[key] = np.zeros((24*60))
 
-            self.heat_regulation_curve[key][int(start.hour*60+start.minute - self.warmup):int(end.hour*60+end.minute)] = 1
+            self.heat_regulation_curve[key][int(start.hour*60+start.minute - self.warmup):int(end.hour*60+end.minute - self.cooldown)] = 1
                
         return self.heat_regulation_curve
 
