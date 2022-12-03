@@ -41,16 +41,18 @@ class RoomBooking:
         format = "%Y-%m-%dT%H:%M:%S"
         start_unix = datetime.datetime.strptime(self.str_start, format).timestamp() / 60
         end_unix = datetime.datetime.strptime(self.str_end, format).timestamp() / 60
-        return start_unix, end_unix
+        return start_unix, end_unix 
 
     def check_conflict(self, other_booking):
-        if self.str_end <= other_booking.str_end and self.str_end > other_booking.str_start:
+        this_start_unix, this_end_unix = self.get_mins()
+        other_start_unix, other_end_unix = other_booking.get_mins()
+        if this_end_unix <= other_end_unix and this_end_unix > other_start_unix:
             return True
-        elif self.str_start <= other_booking.str_start and self.str_end >= other_booking.str_end:
+        elif this_start_unix <= other_start_unix and this_end_unix >= other_end_unix:
             return True
-        elif other_booking.str_end <= self.str_end and other_booking.str_end > self.str_start:
+        elif other_end_unix <= this_end_unix and other_end_unix > this_start_unix:
             return True
-        elif other_booking.str_start <= self.str_start and other_booking.str_end >= self.str_end:
+        elif other_start_unix <= this_start_unix and other_end_unix >= this_end_unix:
             return True
         return False
 
