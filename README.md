@@ -6,7 +6,7 @@ Challenge: EPFL4Sustainability
 ## Minimum viable product
 - Room occupancy is extracted from the [EPFL website](https://occupancy.epfl.ch/)'s timetable.
 - The heating regulation system should set the heater's temperature to minimize energy consumption when the room is not occupied.
-- Temperature in a room should be set at $T_{ideal} = 20 \degree$ for the longest duration possible, and above $T_{min} = 15 \degree$ at all time if there are people inside.
+- Temperature in a room should be set at $T_{hot} = 20 \degree$ for the longest duration possible, and above $T_{min} = 10 \degree$ at all times (it may be more efficient rather than starting from no heating at all; the value can be tuned accordingly).
 - Basic cooling and heating dynamics should be taken into account ($e.g$ inverse exponential cooling)
 - The minimal output consists of 2 curves:
     - The heaters set temperatures at all time (most probably a scale function)
