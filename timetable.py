@@ -12,7 +12,9 @@ class Room:
         if not conflict:
             self.bookings.append(new_booking)
         else:
-            print("WARNING : cannot add the booking because of conflicts")
+            print("WARNING : cannot add the booking")
+            new_booking.display()
+            print("because of conflicts")
 
     def display(self):
         print('Room', self.id, ': ')
@@ -28,7 +30,7 @@ class RoomBooking:
         self.nb_people = nb_people
 
     def display(self):
-        print(self.t_start, self.t_end, self.nb_people)
+        print(self.nb_people, 'people between', self.t_start, 'and', self.t_end)
 
     def check_conflict(self, other_booking):
         if self.t_end <= other_booking.t_end and self.t_end > other_booking.t_start:
@@ -44,7 +46,6 @@ class RoomBooking:
 
 class Timetable:
     def __init__(self, list_rooms) -> None:
-        # list_rooms = {Room}
         self.rooms = {room.id: room for room in list_rooms}
 
     def get_room(self, room_id):
@@ -59,4 +60,3 @@ class Timetable:
     def display(self):
         for room_id in self.rooms:
             self.rooms[room_id].display()
-    

@@ -11,6 +11,7 @@ def main():
 
     room_1.add_booking(RoomBooking(1.5,2.5,4))
     room_1.add_booking(RoomBooking(4,5,2))
+    room_1.add_booking(RoomBooking(3,4,2))
     room_2.add_booking(RoomBooking(5,8,1))
 
     data_tt = {room_1, room_2}
