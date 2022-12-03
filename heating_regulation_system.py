@@ -11,8 +11,7 @@ class HeatingRegulationSystem:
     
     def control_heating(self):
         for i in range(len(self.room.bookings)):
-            t_start = self.room.bookings[i].t_start
-            t_end = self.room.bookings[i].t_end
+            t_start, t_end = self.room.bookings[i].get_mins()
 
             self.heat_regulation_curve[int(t_start):int(t_end)] = 1
 

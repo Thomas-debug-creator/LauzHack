@@ -1,3 +1,4 @@
+import datetime
 import requests
 import json
 
@@ -27,24 +28,31 @@ class Room:
 
     
 class RoomBooking:
-    def __init__(self, id, info, t_start, t_end) -> None:
+    def __init__(self, id, info, str_start, str_end) -> None:
         self.id = id
         self.info = info
-        self.t_start = t_start
-        self.t_end = t_end
+        self.str_start = str_start
+        self.str_end = str_end
 
     def display(self):
-        print(self.info, 'between', self.t_start, 'and', self.t_end)
+        print(self.info, 'between', self.str_start, 'and', self.str_end)
 
-    # TODO: check format of Start/End time if this still works
+    def get_mins(self):
+        format = "%Y-%m-%dT%H:%M:%S"
+        start_time = datetime.datetime.strptime(self.str_start, format)
+        end_time = datetime.datetime.strptime(self.str_end, format)
+        start_min = start_time.hour * 60 + start_time.minute
+        end_min = end_time.hour * 60 + end_time.minute
+        return start_min, end_min
+
     def check_conflict(self, other_booking):
-        if self.t_end <= other_booking.t_end and self.t_end > other_booking.t_start:
+        if self.str_end <= other_booking.str_end and self.str_end > other_booking.str_start:
             return True
-        elif self.t_start <= other_booking.t_start and self.t_end >= other_booking.t_end:
+        elif self.str_start <= other_booking.str_start and self.str_end >= other_booking.str_end:
             return True
-        elif other_booking.t_end <= self.t_end and other_booking.t_end > self.t_start:
+        elif other_booking.str_end <= self.str_end and other_booking.str_end > self.str_start:
             return True
-        elif other_booking.t_start <= self.t_start and other_booking.t_end >= self.t_end:
+        elif other_booking.str_start <= self.str_start and other_booking.str_end >= self.str_end:
             return True
         return False
 
@@ -104,7 +112,7 @@ class Timetable:
 
         # adding bookings to room
         for entry in json_object:
-            new_booking = RoomBooking(id=entry["Value"], t_start=entry["Start"], t_end=entry["End"], info=entry["Text"])
+            new_booking = RoomBooking(id=entry["Value"], str_start=entry["Start"], str_end=entry["End"], info=entry["Text"])
             room_obj.add_booking(new_booking)
 
         return room_obj
