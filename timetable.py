@@ -39,8 +39,8 @@ class RoomBooking:
 
     def get_mins(self):
         format = "%Y-%m-%dT%H:%M:%S"
-        start_unix = datetime.datetime.strptime(self.str_start, format).timestamp() / 60
-        end_unix = datetime.datetime.strptime(self.str_end, format).timestamp() / 60
+        start_unix = datetime.datetime.strptime(self.str_start, format).timestamp() 
+        end_unix = datetime.datetime.strptime(self.str_end, format).timestamp()
         return start_unix, end_unix 
 
     def check_conflict(self, other_booking):
