@@ -5,10 +5,10 @@ import datetime
 
 class HeatingRegulationSystem:
 
-    def __init__(self, room, T_min=10, T_ideal=25, warmup=15, cooldown=5) -> None:
+    def __init__(self, room, T_min=10, T_hot=20, warmup=15, cooldown=5) -> None:
         self.room = room 
         self.T_min = T_min
-        self.T_ideal = T_ideal
+        self.T_hot = T_hot
         self.warmup = warmup                             # minutes takes to attain desired temperature
         self.cooldown = cooldown                             # minutes takes to attain desired temperature
         self.heat_regulation_curve = {} 
