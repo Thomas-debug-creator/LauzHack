@@ -8,14 +8,6 @@ import numpy as np
 def main():
     print('Starting the program')
 
-    # Generate random timetable data
-    room_1 = Room("BC410")
-    room_2 = Room("BC420")
-
-    room_1.add_booking(RoomBooking("BC410","U",1.5,2.5))
-    room_1.add_booking(RoomBooking("BC410","U",4,5))
-    room_2.add_booking(RoomBooking("BC410","U",5,8))
-
     # Get room information online
     list_rooms = ["BC410", "BC420"]
     tt = Timetable(list_rooms)
@@ -34,7 +26,7 @@ def main():
     # plt.plot(time_span, temperature_span)
     # plt.show()
 
-    hrs = HeatingRegulationSystem(room_1)
+    hrs = HeatingRegulationSystem(tt.rooms[list_rooms[0]])
     hrs.control_heating()
     hrs.plot_heat_regulation_curve()
 
