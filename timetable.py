@@ -112,4 +112,4 @@ class Timetable:
 if __name__ == "__main__":
     list_rooms = ["BC410", "BC411"]
     table0 = Timetable(list_rooms)
-    print("test")
+    table0.display()
