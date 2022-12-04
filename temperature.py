@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from scipy.optimize import fsolve
 
 class TemperatureEvolution:
-    def __init__(self, T_min, k_cool = 0.05, k_heat = 0.2) -> None:
+    def __init__(self, T_min = 15, k_cool = 0.05, k_heat = 0.2) -> None:
         self.T_min = T_min
         self.k_cool = k_cool
         self.k_heat = k_heat

@@ -77,7 +77,6 @@ class HeatingRegulationSystem:
             # Get time in UNIX format
             t_start_unix, t_end_unix = self.room.bookings[i].get_mins()
 
-            print(t_start_unix, t_end_unix)
 
             # Get time in standard format
             start, end = self.get_time_standard(self.room.bookings[i])
@@ -90,7 +89,7 @@ class HeatingRegulationSystem:
             if key not in self.heat_regulation_curve.keys():
                 self.heat_regulation_curve[key] = np.zeros((24*60))
 
-            self.heat_regulation_curve[key][int(self.convert_to_minutes(start) - warmup_time) : int(self.convert_to_minutes(end) - cooldown_time)] = 1
+            self.heat_regulation_curve[key][int(warmup_time) : int(cooldown_time)] = 1
                
         return self.heat_regulation_curve
 
