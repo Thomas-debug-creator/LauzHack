@@ -24,7 +24,7 @@ def main():
     table0.display()
 
     for room_id in list_rooms:
-        room = table0[room_id]
+        room = table0[[room_id]]
         # Create heating regulation system
         hrs = HeatingRegulationSystem(room, temperature_evolution)
 
