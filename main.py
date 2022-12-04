@@ -19,7 +19,7 @@ def main():
     temperature_evolution = TemperatureEvolution()
     
     # Make up data for one room
-    list_rooms = ["BC333", "BC329"]
+    list_rooms = ["BC410", "BC420"]
     table0 = Timetable()
     table0.display()
 
@@ -31,7 +31,7 @@ def main():
         # Apply it and plot the regulation curve
         hrs.control_heating()
         print(hrs.time_shifts)
-        # hrs.plot_heat_regulation_curve()
+        hrs.plot_heat_regulation_curve()
 
 
         # Plot the temperature in one room 
