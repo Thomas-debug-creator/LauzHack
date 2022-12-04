@@ -71,7 +71,7 @@ class TemperatureEvolution:
             temperature_data = np.concatenate((temperature_data, temperature_span_i))
 
         # Plot the results
-        print(temperature_shifts)
+        # temperature_data[-1] = temperature_data[-2]
         self.plot_simulated_temperature_over_periode(time_data, temperature_data, time_shifts, temperature_shifts, times_occupancy)
 
         return time_data, temperature_data
@@ -87,6 +87,8 @@ class TemperatureEvolution:
         plt.xlabel('Time [mn]')
         plt.ylabel('Temperature [°Celsius]')
         plt.title('Temperature change in one room')
+        plt.ylim([0, 25])
+        plt.xlim([0, 24*60*6.95])
         plt.legend()
         plt.show()
 
