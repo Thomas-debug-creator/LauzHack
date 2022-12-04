@@ -1,20 +1,21 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.optimize import fsolve
 
 class TemperatureEvolution:
-    def __init__(self, T_min) -> None:
+    def __init__(self, T_min, k_cool = 0.05, k_heat = 0.2) -> None:
         self.T_min = T_min
+        self.k_cool = k_cool
+        self.k_heat = k_heat
 
     def heat_transfer(self, T_start, T_end, t_start, t_end, k):
         return T_end + (T_start - T_end)*np.exp(-k*(t_end-t_start))
 
     def cooling_law(self, T_start, T_end, t_start, t_end):
-        k = 0.05
-        return self.heat_transfer(T_start, T_end, t_start, t_end, k)
+        return self.heat_transfer(T_start, T_end, t_start, t_end, self.k_cool)
 
     def heating_law(self, T_start, T_end, t_start, t_end):
-        k = 0.2
-        return self.heat_transfer(T_start, T_end, t_start, t_end, k)
+        return self.heat_transfer(T_start, T_end, t_start, t_end, self.k_heat)
 
     def simulate_heat_transfer_over_period(self, T_start, T_end, t_start, t_end, nb_points = 100): 
         # Choose heat transfer function
@@ -86,6 +87,33 @@ class TemperatureEvolution:
         plt.title('Temperature change in one room over one day')
         plt.legend()
         plt.show()
+
+    def compute_optimal_switch_time(self, T_next_target, T_previous_target, k_next, n_previous, T_start, t_start, t_target):
+        # T_next_target = next target temperature 
+        # T_previous_target = previous target temperature 
+        # k_next = next time scale
+        # k_previous = previous time scale
+        # T_start = temperature before starting previous transfer
+        # t_start = time at which we started the previous transfer
+        # t_target = target time at which the temperature should be = T_min
+        e = 2.718
+
+    
+        def f_to_optimize(t_star):
+            return T_next_target - self.T_min + (T_previous_target + (T_start - T_previous_target)*e**(-n_previous*(t_star - t_start)) - T_next_target)*e**(-k_next*(t_target - t_star))
+
+        t_star_guess = t_target - 5
+        sol = fsolve(f_to_optimize, t_star_guess)
+
+        return sol[0]
+
+    def compute_warmup_time(self, T_heat, T_cool, T_start, t_start, t_target):
+        return self.compute_optimal_switch_time(T_heat, T_cool, self.k_heat, self.k_cool, T_start, t_start, t_target)
+
+
+    def compute_cooldown_time(self, T_heat, T_cool, T_start, t_start, t_target):
+        return self.compute_optimal_switch_time(T_cool, T_heat, self.k_cool, self.k_heat, T_start, t_start, t_target)
+
 
 
 
