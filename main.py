@@ -8,7 +8,7 @@ from math import floor
 
 
 def main():
-    print('Main simplified')
+    print('Main applied to EPFL room (only on MAC!)')
 
 
 

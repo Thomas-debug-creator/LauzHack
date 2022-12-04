@@ -21,8 +21,8 @@ def main():
     # Make up data for one room
     room_id = "BC420"
     booking_1 = RoomBooking("BC420", "b1", "2022-11-28T09:00:00", "2022-11-28T12:00:00")
-    booking_2 = RoomBooking("BC420", "b2", "2022-11-28T12:09:00", "2022-11-28T14:00:00")
-    booking_3 = RoomBooking("BC420", "b3", "2022-11-28T15:00:00", "2022-11-28T23:59:00")
+    booking_2 = RoomBooking("BC420", "b2", "2022-11-28T12:00:00", "2022-11-28T14:00:00")
+    booking_3 = RoomBooking("BC420", "b3", "2022-11-28T14:00:00", "2022-11-28T23:59:00")
     booking_4 = RoomBooking("BC420", "b4", "2022-12-01T00:09:00", "2022-12-01T12:00:00")
     booking_5 = RoomBooking("BC420", "b5", "2022-12-01T15:09:00", "2022-12-01T18:00:00")
     booking_6 = RoomBooking("BC420", "b6", "2022-12-01T19:00:00", "2022-12-01T19:30:00")
