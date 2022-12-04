@@ -1,6 +1,10 @@
 import datetime
-import requests
+import pickle
+from tqdm import tqdm
 import json
+import os
+import re
+import random
 
 
 class Room:
@@ -58,13 +62,44 @@ class RoomBooking:
 
 
 class Timetable:
-    def __init__(self, list_rooms) -> None:
-        self.rooms = {}
-        for room_id in list_rooms:
-            self.rooms[room_id] = self.__get_timetable(room_id)
+    def __init__(self) -> None:
 
-    def get_room(self, room_id):
+        self.rooms = {}
+        if not os.path.isfile("./timetable.pkl"):
+            print("Hang on a second, we are loading the rooms for each building...")
+            
+            from selenium import webdriver
+            self.browser=webdriver.Safari()
+            self.browser.implicitly_wait(10)
+
+            #buildings = self.__get_buildings()
+            buildings = ["BC"]
+            list_rooms = [room.replace(" ","") for one_building in tqdm(buildings) for room in self.__get_rooms(one_building)]
+            #list_rooms = random.sample(list_rooms,100)
+            #list_rooms = ["BC410", "BC420"]
+            #print(f"\nFun fact: EPFL has {len(list_rooms)} rooms distributed over {len(buildings)} buildings.\n\n")
+
+            for room_id in tqdm(list_rooms):
+                self.rooms[room_id] = self.__get_timetable(room_id)
+
+            del self.browser
+            
+            with open('timetable.pkl', 'wb') as f:
+                pickle.dump(self, f, pickle.HIGHEST_PROTOCOL)
+        else:
+            print("Loading available timetable from cache...")
+            with open('timetable.pkl', 'rb') as f:
+                loaded_obj = pickle.load(f)
+            self.rooms = loaded_obj.rooms
+
+    def get_room(self, room_id) -> Room:
         return self.rooms[room_id]
+
+    def get_number_of_reservations(self) -> int:
+        counter = 0
+        for room_id, room in self.rooms.items():
+            counter += len(room.bookings)
+        return counter
 
     def add_room_booking(self, room_id, booking):
         self.rooms[room_id].add_booking(booking)
@@ -76,19 +111,67 @@ class Timetable:
         for room_id in self.rooms:
             self.rooms[room_id].display()
 
+    def __get_html_source(self, url) -> str:
+
+        # get source code
+        # makes the browser wait if it can't find an element
+        self.browser.get(url)
+        html = self.browser.page_source
+
+        return html
+
+    def __get_buildings(self) -> list:
+
+        url = "https://plan.epfl.ch/buildings.html"
+
+        # extract plain html file as string
+        raw_html = self.__get_html_source(url)
+
+        # set static beginning and end flags of each room specification
+        start_string = '">'
+        stop_string = '</a>'
+
+        # define a pattern to filter
+        pattern = f'{start_string}.*{stop_string}'
+
+        # extract room ids using regex pattern and cutting away unnecessary characters
+        buildings = [substring[len(start_string):-len(stop_string)] for substring in re.findall(pattern, raw_html)]
+
+        return buildings
+
+    def __get_rooms(self, building) -> list:
+
+        url = f'https://plan.epfl.ch/buildings/{building}.html'
+
+        # extract plain html file as string
+        raw_html = self.__get_html_source(url)
+
+        # set static beginning and end flags of each room specification
+        start_string = 'room=='
+        stop_string = '">'
+
+        # define a pattern to filter
+        pattern = f'{start_string}.*{stop_string}'
+
+        # extract room ids using regex pattern and cutting away unnecessary characters
+        rooms = [substring[len(start_string):-len(stop_string)] for substring in re.findall(pattern, raw_html)]
+        
+        # warning message in case no rooms were found
+        if len(rooms) == 0:
+            print(f"WARNING: No rooms found for building {building}")
+
+        return rooms
+
     def __get_timetable(self, room_id):
 
         url = f'https://ewa.epfl.ch/room/Default.aspx?room={room_id}'
 
-        # get response
-        x = requests.get(url)
-
         # extract plain html file as string
-        raw_html = x.text
+        raw_html = self.__get_html_source(url)
 
         # set static beginning and end flags of events section
         start_string = "v.events = "
-        stop_string = ";\r\nv.hours ="
+        stop_string = ";\nv.hours = "
 
         # check if start_string is present in HTML
         if raw_html.count(start_string) != 1 or raw_html.count(stop_string) != 1:
@@ -117,7 +200,6 @@ class Timetable:
 
         return room_obj
 
-if __name__ == "__main__":
-    list_rooms = ["BC410", "BC411"]
-    table0 = Timetable(list_rooms)
+if __name__ == "__main__":# start web browser
+    table0 = Timetable()
     table0.display()
