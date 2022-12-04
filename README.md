@@ -1,18 +1,24 @@
-# Occupancy-based Heat Regulation in EPFL Rooms
-Goal : implement a framework for heat regulation in EPFL rooms based on their occupancy, in order to reduce energy consumption. 
+# Heat Regulation Schedule in EPFL Rooms
+Heating for homes, industry and other applications accounts for around half of total energy consumption. Imagine room heating based on reservation schedules. Rooms well heated, but just when needed.
 
-Challenge: EPFL4Sustainability
+## Motivation
+The ongoing energy crisis makes schools, universities and other public institutions reduce heating to a minimum. In certain countries there even exist maximum temperature thresholds around 15-19°C or they even switch to home office. From our point of view, this would not be necessary if the heating would be dynamically adapted based on the actual usage.
 
-## Minimum viable product
-- Room occupancy is extracted from the [EPFL website](https://occupancy.epfl.ch/)'s timetable.
-- The heating regulation system should set the heater's temperature to minimize energy consumption when the room is not occupied.
-- Temperature in a room should be set at $T_{hot} = 20 \degree$ for the longest duration possible, and above $T_{min} = 10 \degree$ at all times (it may be more efficient rather than starting from no heating at all; the value can be tuned accordingly).
-- Basic cooling and heating dynamics should be taken into account ($e.g$ inverse exponential cooling)
-- The minimal output consists of 2 curves:
-    - The heaters set temperatures at all time (most probably a scale function)
-    - The actual temperature in a room at all time
+This project, realized in 24 hours as part of the [LauzHack2022](https://lauzhack.com/) hackathon, implements a framework for efficiently scheduling heaters' activation based on room occupancy. The goal is to reduce energy consumption while respecting general comfort's standards.
 
-## Extensions
-- Change room allocation for optimizing energy loss.
-- Heat transfer between adjacent rooms.
-- Add human input on the regulation 
+## Features
+- Abstract representation of a timetable for room bookings in a given period of time.
+- Data-fetching from EPFL's room reservation website, giving access to 20 000 rooms in 125 buildings.
+- Temperature change simulation based on simple heat diffusion.
+- Dynamic computation of optimal switch times to reduce energy consumption while ensuring minimum comfort.
+- Model parameterization for personal preferences.
+
+## Future extensions
+- Consider room transitions for optimizing energy useage.
+- Dynamic change of room temperature.
+- Manual impulse on the system.
+
+## Authors
+- [Martin Zwifl](https://github.com/martin-zwifl)
+- [Utsav Akhaury](https://github.com/utsav-akhaury)
+- [Thomas Rimbot](https://github.com/Thomas-debug-creator)
