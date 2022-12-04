@@ -22,7 +22,7 @@ class HeatingRegulationSystem:
         return start, end
 
     def convert_to_minutes(self, time):
-        return time.hour*60 + time.minute + (time.day - self.first_day) * 24*60
+        return time.hour*60 + time.minute + (time.month * 31 + time.day - self.first_day) * 24*60
 
     def get_room_occupancy_in_mn(self):
         times_occupancy = []
@@ -33,7 +33,7 @@ class HeatingRegulationSystem:
 
 
             if i == 0:
-                self.first_day = start.day
+                self.first_day = start.day + start.month * 31
             
 
             # Get times in minute format
@@ -94,7 +94,7 @@ class HeatingRegulationSystem:
             key = 'Room: ' + self.room.id + '  |  Date: ' + datetime.datetime.fromtimestamp(t_start_unix).strftime("%d %b, %Y")
             if key not in self.heat_regulation_curve.keys():
                 self.heat_regulation_curve[key] = np.zeros((24*60))
-            self.heat_regulation_curve[key][int(warmup_time + 24*60*(self.first_day - start.day)) : int(cooldown_time + 24*60*(self.first_day - start.day))] = 1
+            self.heat_regulation_curve[key][int(warmup_time - (start.month * 31 + start.day - self.first_day) * 24*60) : int(cooldown_time - (start.month * 31 + start.day - self.first_day) * 24*60)] = 1
                
         return self.heat_regulation_curve
 
