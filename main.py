@@ -1,41 +1,40 @@
+
 from timetable import *
 from temperature import *
 from heating_regulation_system import *
 
-import matplotlib.pyplot as plt
 import numpy as np
+from math import floor
+
 
 def main():
-    print('Starting the program')
+    print('Main simplified')
 
-    # Get room information online
-    list_rooms = ["BC410", "BC420"]
-    tt = Timetable(list_rooms)
 
-    # Display data
-    tt.display()
 
     # Temperature evolution
-    T_min = 10
-    T_hot = 20
-    warmpup = 15
-    cooldown = 5
-    k = 1
-
-    # time_span = np.arange(0,20)
-    # temperature_evolution = TemperatureEvolution()
-    # temperature_span = temperature_evolution.cooling_law(T_hot, T_cold, k, time_span)
-    # plt.plot(time_span, temperature_span)
-    # plt.show()
+    T_min = 15
+    T_cool = 3
+    T_heat = 20
+    temperature_evolution = TemperatureEvolution()
     
-    # tt.rooms[list_rooms[0]].display()
-    hrs = HeatingRegulationSystem(tt.rooms[list_rooms[0]], 
-                                  T_min=T_min, 
-                                  T_hot=T_hot,
-                                  warmup=warmpup,
-                                  cooldown=cooldown)
-    hrs.control_heating()
-    hrs.plot_heat_regulation_curve()
+    # Make up data for one room
+    list_rooms = ["BC410", "BC420"]
+    table0 = Timetable()
+    table0.display()
+
+    for room_id in list_rooms:
+        room = table0[room_id]
+        # Create heating regulation system
+        hrs = HeatingRegulationSystem(room, temperature_evolution)
+
+        # Apply it and plot the regulation curve
+        hrs.control_heating()
+        hrs.plot_heat_regulation_curve()
+
+
+        # Plot the temperature in one room 
+        temperature_evolution.simulate_varying_heat_transfers_over_period(T_cool, T_heat, hrs.time_shifts, hrs.times_occupancy)
 
 
 

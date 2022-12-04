@@ -22,7 +22,7 @@ class HeatingRegulationSystem:
         return start, end
 
     def convert_to_minutes(self, time):
-        return time.hour*60 + time.minute
+        return time.hour*60 + time.minute + (time.day - self.first_day) * 24*60
 
     def get_room_occupancy_in_mn(self):
         times_occupancy = []
@@ -31,9 +31,15 @@ class HeatingRegulationSystem:
             # Get time in standard format
             start, end = self.get_time_standard(self.room.bookings[i])
 
+
+            if i == 0:
+                self.first_day = start.day
+            
+
             # Get times in minute format
             start_time_mn = self.convert_to_minutes(start)
             end_time_mn = self.convert_to_minutes(end)
+
 
             times_occupancy.append(start_time_mn)
             times_occupancy.append(end_time_mn)
@@ -88,8 +94,7 @@ class HeatingRegulationSystem:
             key = 'Room: ' + self.room.id + '  |  Date: ' + datetime.datetime.fromtimestamp(t_start_unix).strftime("%d %b, %Y")
             if key not in self.heat_regulation_curve.keys():
                 self.heat_regulation_curve[key] = np.zeros((24*60))
-
-            self.heat_regulation_curve[key][int(warmup_time) : int(cooldown_time)] = 1
+            self.heat_regulation_curve[key][int(warmup_time + 24*60*(self.first_day - start.day)) : int(cooldown_time + 24*60*(self.first_day - start.day))] = 1
                
         return self.heat_regulation_curve
 
@@ -104,7 +109,8 @@ class HeatingRegulationSystem:
             plt.title(str(i))
             plt.xticks(np.arange(0, xlims[1]+60, 60), labels=np.arange(0, 25))
             plt.xlabel('Time (Hours)')
-            plt.xlim(xlims); plt.ylim(ylims)
+            plt.xlim(xlims); 
+            plt.ylim(ylims)
             plt.show()
 
         # week_curve = []

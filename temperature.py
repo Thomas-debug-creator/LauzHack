@@ -44,7 +44,8 @@ class TemperatureEvolution:
 
         temperature_shifts = [T_cool] # for visualization purposes
 
-        last_time = 24*60
+        # nb_days = np.round((time_shifts[-1]/(24*60)) ) % 7 
+        last_time = 24*60*7
         time_shifts = np.append(time_shifts, last_time)
 
         # Loop over all time changes 
@@ -70,6 +71,7 @@ class TemperatureEvolution:
             temperature_data = np.concatenate((temperature_data, temperature_span_i))
 
         # Plot the results
+        print(temperature_shifts)
         self.plot_simulated_temperature_over_periode(time_data, temperature_data, time_shifts, temperature_shifts, times_occupancy)
 
         return time_data, temperature_data
@@ -84,7 +86,7 @@ class TemperatureEvolution:
             plt.axvline(t, color = 'k', linestyle = 'dotted')
         plt.xlabel('Time [mn]')
         plt.ylabel('Temperature [°Celsius]')
-        plt.title('Temperature change in one room over one day')
+        plt.title('Temperature change in one room')
         plt.legend()
         plt.show()
 
