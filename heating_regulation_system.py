@@ -1,31 +1,43 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import datetime
+from timetable import *
 
 
 class HeatingRegulationSystem:
 
-    def __init__(self, room, T_min=15, T_ideal=25, warmup=15) -> None:
+    def __init__(self, room, T_min=10, T_hot=20, warmup=15, cooldown=5) -> None:
         self.room = room 
         self.T_min = T_min
-        self.T_ideal = T_ideal
+        self.T_hot = T_hot
         self.warmup = warmup                             # minutes takes to attain desired temperature
+        self.cooldown = cooldown                             # minutes takes to attain desired temperature
         self.heat_regulation_curve = {} 
-    
+
+    def get_time_standard(self, room_booking):
+        format  = "%Y-%m-%dT%H:%M:%S"
+        start = datetime.datetime.strptime(room_booking.str_start, format)
+        end = datetime.datetime.strptime(room_booking.str_end, format)
+        return start, end
+
+    def convert_to_minutes(self, time):
+        return time.hour*60 + time.minute
+
     def control_heating(self):
 
         for i in range(len(self.room.bookings)):
-            t_start, t_end = self.room.bookings[i].get_mins()
 
-            start = datetime.datetime.strptime(self.room.bookings[i].str_start, "%Y-%m-%dT%H:%M:%S")
-            end = datetime.datetime.strptime(self.room.bookings[i].str_end, "%Y-%m-%dT%H:%M:%S")
+            # Get time in UNIX format
+            t_start_unix, t_end_unix = self.room.bookings[i].get_mins()
 
-            key = 'Room: ' + self.room.id + '  |  Date: ' + datetime.datetime.fromtimestamp(t_start).strftime("%d %b, %Y")
+            # Get time in standard format
+            start, end = self.get_time_standard(self.room.bookings[i])
 
+            key = 'Room: ' + self.room.id + '  |  Date: ' + datetime.datetime.fromtimestamp(t_start_unix).strftime("%d %b, %Y")
             if key not in self.heat_regulation_curve.keys():
                 self.heat_regulation_curve[key] = np.zeros((24*60))
 
-            self.heat_regulation_curve[key][int(start.hour*60+start.minute - self.warmup):int(end.hour*60+end.minute)] = 1
+            self.heat_regulation_curve[key][int(self.convert_to_minutes(start) - self.warmup) : int(self.convert_to_minutes(end) - self.cooldown)] = 1
                
         return self.heat_regulation_curve
 

@@ -16,8 +16,10 @@ def main():
     tt.display()
 
     # Temperature evolution
-    T_cold = 10
+    T_min = 10
     T_hot = 20
+    warmpup = 15
+    cooldown = 5
     k = 1
 
     # time_span = np.arange(0,20)
@@ -25,8 +27,13 @@ def main():
     # temperature_span = temperature_evolution.cooling_law(T_hot, T_cold, k, time_span)
     # plt.plot(time_span, temperature_span)
     # plt.show()
-
-    hrs = HeatingRegulationSystem(tt.rooms[list_rooms[0]])
+    
+    # tt.rooms[list_rooms[0]].display()
+    hrs = HeatingRegulationSystem(tt.rooms[list_rooms[0]], 
+                                  T_min=T_min, 
+                                  T_hot=T_hot,
+                                  warmup=warmpup,
+                                  cooldown=cooldown)
     hrs.control_heating()
     hrs.plot_heat_regulation_curve()
 
