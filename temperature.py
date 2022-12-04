@@ -34,7 +34,7 @@ class TemperatureEvolution:
 
         return time_span, temperature_span
 
-    def simulate_varying_heat_transfers_over_period(self, T_cool, T_heat, time_shifts, times_occupancy):
+    def simulate_varying_heat_transfers_over_period(self, T_cool, T_heat, time_shifts, times_occupancy, room):
         # This function simulates the temperature variations when switching the heater on and off over a period of time
 
         # time_shifts = np.concatenate(time_shifts, times_occupancy[-1])
@@ -71,12 +71,12 @@ class TemperatureEvolution:
             temperature_data = np.concatenate((temperature_data, temperature_span_i))
 
         # Plot the results
-        self.plot_simulated_temperature_over_periode(time_data, temperature_data, time_shifts, temperature_shifts, times_occupancy)
+        self.plot_simulated_temperature_over_periode(time_data, temperature_data, time_shifts, temperature_shifts, times_occupancy, room)
 
         return time_data, temperature_data
 
     
-    def plot_simulated_temperature_over_periode(self, time_data, temperature_data, time_shifts, temperature_shifts, times_occupancy):
+    def plot_simulated_temperature_over_periode(self, time_data, temperature_data, time_shifts, temperature_shifts, times_occupancy, room):
         plt.plot(time_data, temperature_data, 'darkorange', label='Temperature')
         plt.plot(time_data, self.T_min*np.ones_like(time_data), 'g--', label='Minimum temperature')
         plt.plot(time_shifts[1::2], temperature_shifts[1::2], 'b*', label='Switch off')
@@ -85,7 +85,7 @@ class TemperatureEvolution:
             plt.axvline(t, color = 'k', linestyle = 'dotted')
         plt.xlabel('Time [mn]')
         plt.ylabel('Temperature [°Celsius]')
-        plt.title('Temperature change in one room')
+        plt.title('Weekly temperature change in ' + room.id)
         plt.ylim([0, 25])
         plt.xlim([0, 24*60*6.95])
         plt.legend()

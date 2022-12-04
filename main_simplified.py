@@ -44,7 +44,7 @@ def main():
 
 
     # Plot the temperature in one room 
-    temperature_evolution.simulate_varying_heat_transfers_over_period(T_cool, T_heat, hrs.time_shifts, hrs.times_occupancy)
+    temperature_evolution.simulate_varying_heat_transfers_over_period(T_cool, T_heat, hrs.time_shifts, hrs.times_occupancy, room)
 
 
 

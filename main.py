@@ -8,7 +8,7 @@ from math import floor
 
 
 def main():
-    print('Main applied to EPFL room (only on MAC!)')
+    print('Main applied to EPFL room')
 
 
 
@@ -19,9 +19,9 @@ def main():
     temperature_evolution = TemperatureEvolution()
     
     # Make up data for one room
-    list_rooms = ["BC410", "BC420"]
+    list_rooms = ["BC410"]
     table0 = Timetable()
-    table0.display()
+    # table0.display()
 
     for room_id in list_rooms:
         room = table0.rooms[room_id]
@@ -30,12 +30,11 @@ def main():
 
         # Apply it and plot the regulation curve
         hrs.control_heating()
-        print(hrs.time_shifts)
         hrs.plot_heat_regulation_curve()
 
 
         # Plot the temperature in one room 
-        temperature_evolution.simulate_varying_heat_transfers_over_period(T_cool, T_heat, hrs.time_shifts, hrs.times_occupancy)
+        temperature_evolution.simulate_varying_heat_transfers_over_period(T_cool, T_heat, hrs.time_shifts, hrs.times_occupancy, table0.rooms[room_id])
 
 
 
